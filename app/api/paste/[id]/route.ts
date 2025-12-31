@@ -1,13 +1,14 @@
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request) {
   try {
-    const { id } = await params; // ✅ THIS IS THE FIX
+    // ✅ Extract ID from URL instead of params
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop();
 
     if (!id) {
       return NextResponse.json(
